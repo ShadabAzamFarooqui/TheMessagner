@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "81058344512",
+    "firebase_url": "https://themessanger-9dd57.firebaseio.com",
+    "project_id": "themessanger-9dd57",
+    "storage_bucket": "themessanger-9dd57.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:81058344512:android:4dae886d54dd1c47",
+        "android_client_info": {
+          "package_name": "com.example.manjooralam.themessanger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "81058344512-1eavqnott1l7mei4isfujnm7bg67ltc5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.manjooralam.themessanger",
+            "certificate_hash": "a9d2b9d4afffa1177e4792b35cecd6c40c2fc255"
+          }
+        },
+        {
+          "client_id": "81058344512-8qomth56srkgftfn1go6qjs5d0iej9l4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBT7TwLJTweOot-sSzDIroh6GtDBMXZqSc"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "81058344512-8qomth56srkgftfn1go6qjs5d0iej9l4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
