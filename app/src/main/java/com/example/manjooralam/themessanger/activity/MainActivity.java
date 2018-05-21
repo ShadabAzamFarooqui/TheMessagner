@@ -2,10 +2,14 @@ package com.example.manjooralam.themessanger.activity;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
@@ -13,12 +17,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.manjooralam.themessanger.R;
 import com.example.manjooralam.themessanger.adapter.AllUserAdapter;
 import com.example.manjooralam.themessanger.adapter.PagerAdapter;
 import com.example.manjooralam.themessanger.utilities.AppSharedPreferences;
+import com.example.manjooralam.themessanger.utilities.Config2;
+import com.example.manjooralam.themessanger.utilities.NotificationUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -35,7 +42,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private TabLayout tabLayout;
     private ProgressDialog pd;
     private DatabaseReference mDatabaseReference;
-
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +62,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
+        mRegistrationBroadcastReceiver=new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(Config2.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+
+
+                }
+            }
+        };
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -170,5 +191,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onStop();
         mDatabaseReference.child("online").setValue(ServerValue.TIMESTAMP);
 
+    }
+
+    @Override
+    protected void onResume() {
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config2.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config2.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
+        super.onPause();
     }
 }
